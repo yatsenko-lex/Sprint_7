@@ -1,18 +1,17 @@
 package ru.praktikum;
 
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
-import ru.praktikum.pojo.GetOrdersRequest;
+import ru.praktikum.services.OrderService;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-public class GetOrdersListTests extends Specifications {
+public class GetOrdersListTests extends OrderService {
 
     @Test
+    @DisplayName("Получение списка заказов")
     public void getOrderListTest() {
-        baseRequest()
-                .body(new GetOrdersRequest().setCourierId(null).setPage(0).setLimit(100).setNearestStation("1"))
-                .when()
-                .get("/api/v1/orders")
-                .then().statusCode(200).body("orders", notNullValue());
+        getOrdersList(null, 0, 100, "1")
+                .statusCode(200).body("orders", notNullValue());
     }
 }

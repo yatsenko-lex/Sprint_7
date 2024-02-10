@@ -1,14 +1,15 @@
 package ru.praktikum;
 
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import ru.praktikum.pojo.CreateOrderRequest;
+import ru.praktikum.services.OrderService;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 @RunWith(Parameterized.class)
-public class CreateOrderTests extends Specifications{
+public class CreateOrderTests extends OrderService {
 
     private final String[] color;
 
@@ -27,13 +28,11 @@ public class CreateOrderTests extends Specifications{
     }
 
     @Test
-    public void createOrderWIthDifferentColorsTest() {baseRequest()
-            .body(new CreateOrderRequest().setFirstName("Name").setLastName("LastName").setAddress("Address")
-                    .setMetroStation(1).setPhone("89209999999").setRentTime(3).setDeliveryDate("2024-10-10")
-                    .setComment("Comment").setColor(color))
-            .when()
-            .post("/api/v1/orders")
-            .then().statusCode(201).body("track", notNullValue());
+    @DisplayName("Создание заказа")
+    public void createOrderWIthDifferentColorsTest() {
+        createOrder("Name", "LastName", "Address", 1,
+                "89209999999", 3, "2024-10-10", "Comment", color)
+                .statusCode(201).body("track", notNullValue());
 
     }
 

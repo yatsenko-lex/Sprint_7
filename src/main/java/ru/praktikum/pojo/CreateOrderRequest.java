@@ -6,37 +6,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 @Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreateOrderRequest {
 
     @JsonProperty("firstName")
-    public String firstName;
+    private String firstName;
 
     @JsonProperty("lastName")
-    public String lastName;
+    private String lastName;
 
     @JsonProperty("address")
-    public String address;
+    private String address;
 
     @JsonProperty("metroStation")
-    public Integer metroStation;
+    private Integer metroStation;
 
     @JsonProperty("phone")
-    public String phone;
+    private String phone;
 
     @JsonProperty("rentTime")
-    public Integer rentTime;
+    private Integer rentTime;
 
     @JsonProperty("deliveryDate")
-    public String deliveryDate;
+    private String deliveryDate;
 
     @JsonProperty("comment")
-    public String comment;
+    private String comment;
 
     @JsonProperty("color")
-    public String[] color;
+    private String[] color;
 }

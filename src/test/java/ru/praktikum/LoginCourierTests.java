@@ -1,73 +1,58 @@
 package ru.praktikum;
 
+import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
-import ru.praktikum.pojo.CourierCreateRequest;
-import ru.praktikum.pojo.CourierLoginRequest;
+import ru.praktikum.services.CourierService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-public class LoginCourierTests extends Specifications{
+public class LoginCourierTests extends CourierService {
 
     @Test
+    @DisplayName("Логин курьера")
     public void loginCourierTest() {
         String login = RandomStringUtils.random(5);
         String password = RandomStringUtils.random(5);
         String firstName = RandomStringUtils.random(5);
-        baseRequest()
-                .body(new CourierCreateRequest().setFirstName(firstName).setLogin(login).setPassword(password))
-                .when()
-                .post("/api/v1/courier");
-        baseRequest().body(new CourierLoginRequest().setLogin(login).setPassword(password))
-                .when()
-                .post("/api/v1/courier/login")
-                .then().statusCode(200).body("id", notNullValue());
+        createCourier(login, password, firstName);
+        loginCourier(login, password).statusCode(200).body("id", notNullValue());
     }
 
     @Test
+    @DisplayName("Логин курьера без поля 'Login'")
     public void loginWithoutLoginTest() {
-        baseRequest().body(new CourierLoginRequest().setLogin("").setPassword("qwe"))
-                .when()
-                .post("/api/v1/courier/login")
-                .then().statusCode(400).body("message", is("Недостаточно данных для входа"));
+        loginCourier("", "qwe")
+                .statusCode(400).body("message", is("Недостаточно данных для входа"));
     }
 
     @Test
+    @DisplayName("Логин курьера без поля 'Password'")
     public void loginWithoutPasswordTest() {
-        baseRequest().body(new CourierLoginRequest().setLogin("").setPassword("qwe"))
-                .when()
-                .post("/api/v1/courier/login")
-                .then().statusCode(400).body("message", is("Недостаточно данных для входа"));
+        loginCourier("qwe", "")
+                .statusCode(400).body("message", is("Недостаточно данных для входа"));
     }
 
     @Test
+    @DisplayName("Логин курьера с неверным полем 'Login'")
     public void loginWithWrongLoginTest() {
         String login = RandomStringUtils.random(5);
         String password = RandomStringUtils.random(5);
         String firstName = RandomStringUtils.random(5);
-        baseRequest()
-                .body(new CourierCreateRequest().setFirstName(firstName).setLogin(login).setPassword(password))
-                .when()
-                .post("/api/v1/courier");
-        baseRequest().body(new CourierLoginRequest().setLogin("1111qweqweqwe").setPassword(password))
-                .when()
-                .post("/api/v1/courier/login")
-                .then().statusCode(404).body("message", is("Учетная запись не найдена"));
+        createCourier(login, password, firstName);
+        loginCourier("1111qweqweqwe", password)
+                .statusCode(404).body("message", is("Учетная запись не найдена"));
     }
 
     @Test
+    @DisplayName("Логин курьера с неверным полем 'Password'")
     public void loginWithWrongPasswordTest() {
         String login = RandomStringUtils.random(5);
         String password = RandomStringUtils.random(5);
         String firstName = RandomStringUtils.random(5);
-        baseRequest()
-                .body(new CourierCreateRequest().setFirstName(firstName).setLogin(login).setPassword(password))
-                .when()
-                .post("/api/v1/courier");
-        baseRequest().body(new CourierLoginRequest().setLogin(login).setPassword("qweqweqwe"))
-                .when()
-                .post("/api/v1/courier/login")
-                .then().statusCode(404).body("message", is("Учетная запись не найдена"));
+        createCourier(login, password, firstName);
+        loginCourier(login, "qweqweqweqew")
+                .statusCode(404).body("message", is("Учетная запись не найдена"));
     }
 }
