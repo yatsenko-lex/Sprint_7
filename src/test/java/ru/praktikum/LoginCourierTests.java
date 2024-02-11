@@ -18,6 +18,8 @@ public class LoginCourierTests extends CourierService {
         String firstName = RandomStringUtils.random(5);
         createCourier(login, password, firstName);
         loginCourier(login, password).statusCode(200).body("id", notNullValue());
+        Integer id = loginCourier(login, password).extract().body().path("id");
+        deleteCourier(id);
     }
 
     @Test
@@ -43,6 +45,8 @@ public class LoginCourierTests extends CourierService {
         createCourier(login, password, firstName);
         loginCourier("1111qweqweqwe", password)
                 .statusCode(404).body("message", is("Учетная запись не найдена"));
+        Integer id = loginCourier(login, password).extract().body().path("id");
+        deleteCourier(id);
     }
 
     @Test
@@ -54,5 +58,7 @@ public class LoginCourierTests extends CourierService {
         createCourier(login, password, firstName);
         loginCourier(login, "qweqweqweqew")
                 .statusCode(404).body("message", is("Учетная запись не найдена"));
+        Integer id = loginCourier(login, password).extract().body().path("id");
+        deleteCourier(id);
     }
 }
