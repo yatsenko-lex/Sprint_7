@@ -9,7 +9,9 @@ import ru.praktikum.services.OrderService;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 @RunWith(Parameterized.class)
-public class CreateOrderTests extends OrderService {
+public class CreateOrderTests {
+
+    OrderService orderService = new OrderService();
 
     private final String[] color;
 
@@ -30,7 +32,7 @@ public class CreateOrderTests extends OrderService {
     @Test
     @DisplayName("Создание заказа")
     public void createOrderWIthDifferentColorsTest() {
-        createOrder("Name", "LastName", "Address", 1,
+        orderService.createOrder("Name", "LastName", "Address", 1,
                 "89209999999", 3, "2024-10-10", "Comment", color)
                 .statusCode(201).body("track", notNullValue());
 
